@@ -1,0 +1,27 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Django local artifacts
+db.sqlite3
+*.sqlite3
+media/
+
+# Collected/static build output
+staticfiles_build/
+
+# Test and coverage artifacts
+.coverage
+.pytest_cache/
+htmlcov/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
