@@ -208,4 +208,6 @@ git push origin feature/your-feature-name
 
 ## License
 
-Add your project license here (for example, MIT) if not already defined.
+MIT License
+
+Copyright (c) 2026 Rajdeep Podder
