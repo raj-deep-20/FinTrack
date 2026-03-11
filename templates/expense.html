@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FinTrack | Expenses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'expense.css' %}">
+</head>
+<body>
+    <div class="app-shell">
+        {% include 'partials/app_nav.html' with active_page='expenses' %}
+
+        <section class="content-card page-section" data-reveal>
+            <div class="section-head">
+                <div>
+                    <h1 class="page-title">Expense Ledger</h1>
+                    <p class="muted">Track expense records, modify entries, and download reports.</p>
+                </div>
+                <button class="btn-primary" type="button" data-open-panel>Add Expense</button>
+            </div>
+
+            <div class="table-tools" data-reveal>
+                <input class="table-search" type="text" placeholder="Search expenses by name, category, amount..." data-table-search="#expenseTable">
+                <span class="table-hint">Tip: click table headers to sort.</span>
+            </div>
+
+            <div class="table-wrap" data-reveal>
+                <table class="data-table" id="expenseTable" data-sortable="true">
+                    <thead>
+                        <tr>
+                            <th data-sort="true" data-col="0" data-sort-type="number">Sr.No.</th>
+                            <th data-sort="true" data-col="1" data-sort-type="text">Name</th>
+                            <th data-sort="true" data-col="2" data-sort-type="text">Category</th>
+                            <th data-sort="true" data-col="3" data-sort-type="number">Amount</th>
+                            <th data-sort="true" data-col="4" data-sort-type="date">Date</th>
+                            <th data-sort="true" data-col="5" data-sort-type="text">Note</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in expenses %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ expense.name }}</td>
+                            <td>{{ expense.category }}</td>
+                            <td>{{ expense.amount }}</td>
+                            <td>{{ expense.date }}</td>
+                            <td>{{ expense.note }}</td>
+                            <td><a class="btn-ghost" href="/edit-expense/{{ expense.id }}">Edit</a></td>
+                            <td>
+                                <form class="inline-action" action="/delete-expense/{{ expense.id }}" method="post" data-confirm="Delete this expense entry?" data-toast-success="Expense entry deleted.">
+                                    {% csrf_token %}
+                                    <button class="btn-secondary" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr class="empty-row">
+                            <td colspan="8">
+                                <div class="empty-state">No expense entries yet. Add your first expense to keep your budget in sync.</div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="report-actions" data-reveal>
+                <a class="btn-ghost" href="/expense-report/daily">Daily Report</a>
+                <a class="btn-ghost" href="/expense-report/weekly">Weekly Report</a>
+                <a class="btn-ghost" href="/expense-report/monthly">Monthly Report</a>
+                <a class="btn-ghost" href="/expense-report/alltime">All Time Report</a>
+            </div>
+        </section>
+    </div>
+
+    <div class="slide-panel" data-panel>
+        <div class="panel-content">
+            <div class="panel-head">
+                <h2>Add Expense Details</h2>
+                <button class="close-btn" type="button" data-close-panel>X</button>
+            </div>
+
+            <form id="expenseDetailsForm" action="/expenses" method="post" data-toast-success="Expense saved successfully.">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            <option value="" selected disabled>Select category</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" name="amount" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" data-default-today required>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="note">Note</label>
+                        <textarea id="note" name="note" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" type="submit">Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'app.js' %}"></script>
+</body>
+</html>

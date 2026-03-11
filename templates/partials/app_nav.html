@@ -1,0 +1,24 @@
+<nav class="app-nav">
+    <a class="brand" href="/dashboard" aria-label="Go to dashboard">
+        <span class="brand-mark">F</span>
+        <span class="brand-text">FinTrack</span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-toggle-nav>
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-links" data-nav-links>
+        <a class="nav-link {% if active_page == 'dashboard' %}is-active{% endif %}" href="/dashboard">Dashboard</a>
+        <a class="nav-link {% if active_page == 'incomes' %}is-active{% endif %}" href="/incomes">Incomes</a>
+        <a class="nav-link {% if active_page == 'expenses' %}is-active{% endif %}" href="/expenses">Expenses</a>
+        <a class="nav-link {% if active_page == 'settings' %}is-active{% endif %}" href="/settings">Settings</a>
+    </div>
+
+    <div class="nav-actions">
+        <a class="icon-btn {% if active_page == 'profile' %}is-active{% endif %}" href="/profile" aria-label="Profile">P</a>
+        <a class="icon-btn danger" href="/logout" aria-label="Logout">L</a>
+    </div>
+</nav>

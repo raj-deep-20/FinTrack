@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinTrack | Dashboard</title>
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+</head>
+<body>
+    <div class="app-shell">
+        {% include 'partials/app_nav.html' with active_page='dashboard' %}
+
+        <section class="content-card" style="padding: 18px;" data-reveal>
+            <h1 class="page-title">Financial Overview</h1>
+            <p class="page-subtitle">Track the last 10 days of activity and category-level spending distribution.</p>
+
+            <div class="dashboard-grid" style="margin-top: 16px;" data-reveal>
+                <div class="chart-stack">
+                    <article class="chart-card">
+                        <h3>Income Trend (Last 10 Days)</h3>
+                        <div class="chart-canvas-wrap"><canvas id="chart1"></canvas></div>
+                    </article>
+
+                    <article class="chart-card">
+                        <h3>Expense Trend (Last 10 Days)</h3>
+                        <div class="chart-canvas-wrap"><canvas id="chart2"></canvas></div>
+                    </article>
+                </div>
+
+                <aside class="side-panel" data-reveal>
+                    <article class="chart-card" style="margin: 0;">
+                        <h3>Expense by Category</h3>
+                        <div class="chart-canvas-wrap" style="height: 250px;"><canvas id="chart3"></canvas></div>
+                    </article>
+
+                    <div class="side-actions" data-reveal>
+                        <a class="btn-primary" href="/incomes">Manage Incomes</a>
+                        <a class="btn-secondary" href="/expenses">Manage Expenses</a>
+                    </div>
+
+                    <div class="balance-card">
+                        <p class="balance-label">Current Balance</p>
+                        <p class="balance-value">{{ balance }} INR</p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="{% static 'app.js' %}"></script>
+    <script>
+        const labels = [{% for day in pre_10days_list %}"{{ day }}",{% endfor %}];
+
+        new Chart(document.getElementById("chart1").getContext("2d"), {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Incomes",
+                    data: [{% for income in Income_last_10days_amount %}{{ income }},{% endfor %}],
+                    backgroundColor: "rgba(31, 191, 166, 0.35)",
+                    borderColor: "rgba(31, 191, 166, 1)",
+                    borderWidth: 1.4,
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: "#dcecff" } } },
+                scales: {
+                    x: { ticks: { color: "#bdd1e8" }, grid: { color: "rgba(255,255,255,0.08)" } },
+                    y: { beginAtZero: true, ticks: { color: "#bdd1e8" }, grid: { color: "rgba(255,255,255,0.08)" } },
+                },
+            },
+        });
+
+        new Chart(document.getElementById("chart2").getContext("2d"), {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Expenses",
+                    data: [{% for expense in Expense_last_10days_amount %}{{ expense }},{% endfor %}],
+                    borderColor: "rgba(232, 111, 63, 1)",
+                    backgroundColor: "rgba(232, 111, 63, 0.2)",
+                    borderWidth: 2,
+                    tension: 0.33,
+                    fill: true,
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: "#dcecff" } } },
+                scales: {
+                    x: { ticks: { color: "#bdd1e8" }, grid: { color: "rgba(255,255,255,0.08)" } },
+                    y: { beginAtZero: true, ticks: { color: "#bdd1e8" }, grid: { color: "rgba(255,255,255,0.08)" } },
+                },
+            },
+        });
+
+        new Chart(document.getElementById("chart3").getContext("2d"), {
+            type: "doughnut",
+            data: {
+                labels: [{% for category in category_list %}"{{ category }}",{% endfor %}],
+                datasets: [{
+                    data: [{% for val in catg_total_list %}{{ val }},{% endfor %}],
+                    backgroundColor: ["#1fbfa6", "#2a89c9", "#e86f3f", "#f1b552", "#74d0e6", "#8ea5b8"],
+                    borderWidth: 0,
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: "#dcecff", boxWidth: 10 }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

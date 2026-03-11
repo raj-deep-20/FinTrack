@@ -1,0 +1,77 @@
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 18px;
+}
+
+.category-card {
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 16px;
+    transition: transform 0.22s ease, border-color 0.22s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(31, 191, 166, 0.35);
+}
+
+.category-card h3 {
+    margin: 0 0 10px;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.inline-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.inline-form input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.category-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background-color 0.2s ease;
+}
+
+.category-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.category-item form,
+.category-item a {
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .inline-form {
+        flex-direction: column;
+    }
+}

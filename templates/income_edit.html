@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FinTrack | Edit Income</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'expense.css' %}">
+</head>
+<body>
+    <div class="app-shell">
+        {% include 'partials/app_nav.html' with active_page='incomes' %}
+
+        <section class="content-card edit-shell edit-card" data-reveal>
+            <h1 class="page-title">Update Income</h1>
+
+            <form id="incomeDetailsForm" action="/edit-income/{{ income.id }}" method="post" data-toast-success="Income updated successfully.">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" value="{{ income.name }}" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            {% for category in categories %}
+                            {% if category == income.category %}
+                            <option value="{{ category.id }}" selected>{{ category.name }}</option>
+                            {% else %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" name="amount" min="0" step="0.01" value="{{ income.amount }}" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" value="{{ income.date }}" required>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="note">Note</label>
+                        <textarea id="note" name="note" rows="4">{{ income.note }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" type="submit">Update Income</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <script src="{% static 'app.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinTrack | Settings</title>
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'setting.css' %}">
+</head>
+<body>
+    <div class="app-shell">
+        {% include 'partials/app_nav.html' with active_page='settings' %}
+
+        <section class="content-card" style="padding: 18px;" data-reveal>
+            <h1 class="page-title">Category Settings</h1>
+            <p class="page-subtitle">Manage income and expense categories used in your entries.</p>
+
+            <div class="settings-grid" style="margin-top: 12px;">
+                <article class="category-card" data-reveal>
+                    <h3>Income Categories</h3>
+                    <form class="inline-form" method="post" action="/add-income-category" data-toast-success="Income category added.">
+                        {% csrf_token %}
+                        <input type="text" id="income" name="name" placeholder="Enter category" required>
+                        <button class="btn-primary" type="submit">Add</button>
+                    </form>
+
+                    <ul class="category-list">
+                        {% for category in income_categories %}
+                        <li class="category-item">
+                            <span>{{ category }}</span>
+                            <form class="inline-action" action="/remove-income-category/{{ category.id }}" method="post" data-confirm="Remove this income category?" data-toast-success="Income category removed.">
+                                {% csrf_token %}
+                                <button class="btn-secondary" type="submit">Remove</button>
+                            </form>
+                        </li>
+                        {% empty %}
+                        <li class="empty-state">No income categories found. Add one above.</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+
+                <article class="category-card" data-reveal>
+                    <h3>Expense Categories</h3>
+                    <form class="inline-form" method="post" action="/add-expense-category" data-toast-success="Expense category added.">
+                        {% csrf_token %}
+                        <input type="text" id="expense" name="name" placeholder="Enter category" required>
+                        <button class="btn-primary" type="submit">Add</button>
+                    </form>
+
+                    <ul class="category-list">
+                        {% for category in expense_categories %}
+                        <li class="category-item">
+                            <span>{{ category }}</span>
+                            <form class="inline-action" action="/remove-expense-category/{{ category.id }}" method="post" data-confirm="Remove this expense category?" data-toast-success="Expense category removed.">
+                                {% csrf_token %}
+                                <button class="btn-secondary" type="submit">Remove</button>
+                            </form>
+                        </li>
+                        {% empty %}
+                        <li class="empty-state">No expense categories found. Add one above.</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <script src="{% static 'app.js' %}"></script>
+</body>
+</html>
