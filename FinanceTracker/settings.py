@@ -27,19 +27,19 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = [
     host.strip() for host in os.getenv(
         'ALLOWED_HOSTS',
-        '127.0.0.1,localhost,.vercel.app'
+        '127.0.0.1,localhost,.vercel.app,.onrender.com'
     ).split(',') if host.strip()
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip() for origin in os.getenv(
         'CSRF_TRUSTED_ORIGINS',
-        'https://*.vercel.app'
+        'https://*.vercel.app,https://*.onrender.com'
     ).split(',') if origin.strip()
 ]
 
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -138,7 +139,8 @@ STATICFILES_DIRS =[
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles_build','static')
-# STATICFILES_STORAGE="whitenoise.storage.CompressedManifestStaticFilesStorage"
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
